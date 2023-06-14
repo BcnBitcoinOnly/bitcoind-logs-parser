@@ -12,7 +12,7 @@ $f = fopen($argv[1], 'r');
 echo 'timestamp,height,hash,version,log2_work,compact_size_bytes,prefilled_txs,mempool_txs,extra_mempool_txs,requested_txs,validation_time' . PHP_EOL;
 
 while(($line = fgets($f)) !== false) {
-    if (preg_match('/^(?<timestamp>.+) Initialized PartiallyDownloadedBlock for block (?<hash>[0-9a-f]+) using a cmpctblock of size (?<size>\d+)/', $line, $matches)) {
+    if (preg_match('/^(?<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[A-Z]+)(?: \[cmpctblock])? Initialized PartiallyDownloadedBlock for block (?<hash>[0-9a-f]+) using a cmpctblock of size (?<size>\d+)/', $line, $matches)) {
         $hash = $matches['hash'];
 
         if (!isset($data[$hash])) {
@@ -25,7 +25,7 @@ while(($line = fgets($f)) !== false) {
         continue;
     }
 
-    if (preg_match('/^(?<timestamp>.+) Successfully reconstructed block (?<hash>[0-9a-f]+) with (?<prefilled>\d+) txn prefilled, (?<mempool>\d+) txn from mempool \(incl at least (?<extra>\d+) from extra pool\) and (?<requested>\d+) txn requested/', $line, $matches)) {
+    if (preg_match('/^(?<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[A-Z]+)(?: \[cmpctblock])? Successfully reconstructed block (?<hash>[0-9a-f]+) with (?<prefilled>\d+) txn prefilled, (?<mempool>\d+) txn from mempool \(incl at least (?<extra>\d+) from extra pool\) and (?<requested>\d+) txn requested/', $line, $matches)) {
         $hash = $matches['hash'];
 
         $data[$hash]['prefilled'] = (int) $matches['prefilled'];
@@ -36,7 +36,7 @@ while(($line = fgets($f)) !== false) {
         continue;
     }
 
-    if (preg_match('/^(?<timestamp>.+) UpdateTip: new best=(?<hash>[0-9a-f]+) height=(?<height>\d+) version=(?<version>0x[0-9a-f]+) log2_work=(?<work>\d+\.\d+)/', $line, $matches)) {
+    if (preg_match('/^(?<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[A-Z]+) UpdateTip: new best=(?<hash>[0-9a-f]+) height=(?<height>\d+) version=(?<version>0x[0-9a-f]+) log2_work=(?<work>\d+\.\d+)/', $line, $matches)) {
         $hash = $matches['hash'];
 
         $data[$hash]['end'] = $matches['timestamp'];
