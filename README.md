@@ -35,19 +35,36 @@ $ php parser.php path/to/debug.log > table.csv
 ## Sample
 
 ```
-timestamp,height,hash,version,log2_work,compact_size_bytes,prefilled_txs,mempool_txs,extra_mempool_txs,requested_txs,validation_time
-2023-06-07T00:16:14Z,793180,0000000000000000000097f32391da9fc1870759eaadb52965ae30f4a3202732,0x328de000,94.226061,15724,1,2392,0,162,1
-2023-06-07T00:16:58Z,793181,00000000000000000002ada0c351f0699b916d4ea52b853918b10920b7c68f2f,0x31070000,94.226075,13507,1,2022,2,163,1
-2023-06-07T00:26:45Z,793182,000000000000000000006c2421ee6f25e1b32e50cbcc1544548a4981e9eae2fd,0x318d8000,94.226089,23287,1,3758,51,72,1
-2023-06-07T00:28:36Z,793183,000000000000000000026ec9d67064ba963ff29dc9bdbffaa0bdb5faaba897f6,0x20000000,94.226102,25928,1,4077,7,186,1
-2023-06-07T00:34:19Z,793184,0000000000000000000538cde55a4a3e11bce13f9b467519962b2bafde091fb8,0x201c6000,94.226116,30915,1,3110,53,1976,4
-2023-06-07T01:00:44Z,793185,00000000000000000000b5b8e7d0aa7b35e3b760f438cdc35c92b66b45e0d0ea,0x2e52e000,94.226130,15901,1,2473,1,126,1
-2023-06-07T01:07:08Z,793186,00000000000000000003641844b8bc4f53141332366b0283478935657220b00b,0x20008000,94.226143,23575,1,2415,5,1448,2
+timestamp,height,hash,compact_size,prefilled_txs,mempool_txs,extra_mempool_txs,requested_txs,reconstruct_time,validation_time,total_time
+2023-06-14T18:27:00Z,794344,00000000000000000004f4c16936729ac164c0062d31cee55bc9daa94a89e973,20813,1,3284,4,120,1,3,4
+2023-06-14T18:32:39Z,794345,00000000000000000001e5c3e3f9315c72e6acb061a6b8840e070582f9816c5f,13955,1,2024,5,210,3,0,3
+2023-06-14T18:34:46Z,794346,00000000000000000001bf4ab1e871003efdf0b1907b477b1a02906d1bb1d16b,16267,1,1743,68,917,2,1,3
+2023-06-14T18:35:55Z,794347,00000000000000000004dc0a8a02ebd2f266627cb8297e088a4320231010841e,3501,1,442,67,59,2,0,2
+2023-06-14T18:37:37Z,794348,000000000000000000050a3dda9f9e1820a1252d64e885638706b2dd23a888c6,4266,1,588,66,58,2,0,2
+2023-06-14T18:42:37Z,794349,000000000000000000025f382c9c981da40c0d867301c08026a20e7464a233ff,11577,1,1418,9,429,1,0,1
+2023-06-14T18:49:46Z,794350,0000000000000000000299ff60073cad4389af887c386fb43d44e0b391f09c05,14838,1,1911,37,511,8,0,8
 ```
 
 Note: even with `debug=cmpctblock` turned on some debug lines can be missing for some of the blocks.
-When the script doesn't find all the information it needs to fill in all columns it will print `NULL`, like so:
+When the script doesn't find all the information it needs to fill in all columns it will leave empty fields, like so:
 
 ```
-2023-06-12T13:50:33Z,794041,00000000000000000002bffdb280d5792665fc8b5e58f2bb6a2bd794fe9950de,0x20200000,94.237812,14293,NULL,NULL,NULL,NULL,40
+2023-06-12T13:50:33Z,794041,00000000000000000002bffdb280d5792665fc8b5e58f2bb6a2bd794fe9950de,,,,,,,,
 ```
+
+
+## Field reference
+
+| Field             | Description                                                               |
+|-------------------|---------------------------------------------------------------------------|
+| timestamp         | Timestamp at which the block was appended to the blockchain               |
+| height            | Block height                                                              |
+| hash              | SHA256 hash of the block                                                  |
+| compact_size      | Size in bytes of the received compact block header                        |
+| prefilled_txs     | Transactions that came with the block (always 1, the coinbase TX)         |
+| mempool_txs       | Transactions that were found in the mempool when reconstructing the block |
+| extra_mempool_txs | Transactions from the "extra" mempool? Research needed                    |
+| requested_txs     | Transactions that had to be requested to peers to reconstruct the block   |
+| reconstruct_time  | Time in seconds that it took to reconstruct the compact block             |
+| validation_time   | Time in seconds that it took to validate the reconstructed block          |
+| total_time        | reconstruct_time + validation_time                                        |
