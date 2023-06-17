@@ -55,12 +55,12 @@ while(($line = fgets($f)) !== false) {
             $hash,
             $data[$hash]['version'],
             $data[$hash]['log2_work'],
-            $data[$hash]['compact_size'] ?? 'NULL',
-            $data[$hash]['prefilled'] ?? 'NULL',
-            $data[$hash]['mempool'] ?? 'NULL',
-            $data[$hash]['extra'] ?? 'NULL',
-            $data[$hash]['requested'] ?? 'NULL',
-            $data[$hash]['validation_time'] ?? 'NULL'
+            $data[$hash]['compact_size'] ?? '',
+            $data[$hash]['prefilled'] ?? '',
+            $data[$hash]['mempool'] ?? '',
+            $data[$hash]['extra'] ?? '',
+            $data[$hash]['requested'] ?? '',
+            $data[$hash]['validation_time'] ?? ''
         );
 
         unset($data[$hash]);
